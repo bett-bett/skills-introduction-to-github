@@ -69,7 +69,6 @@ jobs:
     if: >-
       ${{ !github.event.repository.is_template
           && needs.get_current_step.outputs.current_step == 2 
-          # if the current event is triggered from a branch within the repo
           && github.ref_type == 'branch'
           && github.ref_name == 'my-first-branch' 
           && needs.get_file_created.outputs.created_filenames == contains(needs.get_file_created.outputs.created_filenames, 'PROFILE.md')
