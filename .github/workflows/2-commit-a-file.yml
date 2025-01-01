@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
       - id: get_step
         run: |
-          created_filenames=$(ls .)
+          created_filenames=$(ls -1)
           echo "created_filenames=${created_filenames}" >> $GITHUB_OUTPUT
     outputs:
       created_filenames: ${{ steps.get_step.outputs.created_filenames }}
