@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "created_filenames=$(ls .)" >> $GITHUB_OUTPUT
     outputs:
-      created_filenames: ${{ steps.get_step.ouputs.created_filenames }}
+      created_filenames: ${{ steps.get_step.outputs.created_filenames }}
 
   get_file_content:
     name: Check contents of profile.md
@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "profile_content=$(cat ./PROFILE.md)" >> $GITHUB_OUTPUT
     outputs:
-      profile_content: ${{ steps.get_step.ouputs.profile_content }}
+      profile_content: ${{ steps.get_step.outputs.profile_content }}
         
   on_commit_a_file:
     name: On commit a file
