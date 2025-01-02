@@ -39,12 +39,10 @@ jobs:
         uses: actions/checkout@v4
       - id: get_step
         run: |
-          created_filenames=$(ls -1)
-          echo "List of files: ${created_filenames}"
-
-          echo "created_filenames=${created_filenames}" >> $GITHUB_OUTPUT
+          created_filename=$(find . -type f -name "PROFILE.md")
+          echo "created_filename=${created_filename}" >> $GITHUB_OUTPUT
     outputs:
-      created_filenames: ${{ steps.get_step.outputs.created_filenames }}
+      created_filename: ${{ steps.get_step.outputs.created_filename }}
 
   get_file_content:
     name: Check contents of profile.md
@@ -74,7 +72,7 @@ jobs:
           && needs.get_current_step.outputs.current_step == 2 
           && github.ref_type == 'branch'
           && github.ref_name == 'my-first-branch' 
-          && contains(needs.get_file_created.outputs.created_filenames, 'PROFILE.md')
+          && needs.get_file_created.outputs.created_filename == 'true'
           && needs.get_file_content.outputs.profile_content != ''
           }}}}
 
