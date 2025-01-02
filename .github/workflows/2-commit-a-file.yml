@@ -31,18 +31,50 @@ jobs:
     outputs:
       current_step: ${{ steps.get_step.outputs.current_step }}
 
+  get_file_created:
+    name: Check created filename
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: get_step
+        run: |
+          created_filename=$(find . -type f -name "PROFILE.md")
+          echo "created_filename=${created_filename}" >> $GITHUB_OUTPUT
+    outputs:
+      created_filename: ${{ steps.get_step.outputs.created_filename }}
+
+  get_file_content:
+    name: Check contents of profile.md
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: get_step
+        run: |
+          echo "profile_content=$(cat ./PROFILE.md)" >> $GITHUB_OUTPUT
+    outputs:
+      profile_content: ${{ steps.get_step.outputs.profile_content }}
+        
   on_commit_a_file:
     name: On commit a file
-    needs: get_current_step
+    needs: [get_current_step, get_file_created, get_file_content]
 
     # We will only run this action when:
     # 1. This repository isn't the template repository.
     # 2. The step is currently 2.
+    # 3. PROFILE.md file is created
+    # 4. content is added to created file
     # Reference: https://docs.github.com/en/actions/learn-github-actions/contexts
     # Reference: https://docs.github.com/en/actions/learn-github-actions/expressions
     if: >-
       ${{ !github.event.repository.is_template
-          && needs.get_current_step.outputs.current_step == 2 }}
+          && needs.get_current_step.outputs.current_step == 2 
+          && github.ref_type == 'branch'
+          && github.ref_name == 'my-first-branch' 
+          && needs.get_file_created.outputs.created_filename == 'true'
+          && needs.get_file_content.outputs.profile_content != ''
+          }}}}
 
     # We'll run Ubuntu for performance instead of Mac or Windows.
     runs-on: ubuntu-latest
